@@ -1,4 +1,0 @@
-Pranav;Muscle Gain
-Day:1;run;12;high
-Day:2;play;90;high
-Day:3;walk;20;low

@@ -1,0 +1,20 @@
+{
+    "profile": {
+        "name": "Pranav",
+        "goal": "Endurance"
+    },
+    "logs": [
+        {
+            "day": 1,
+            "type": "run",
+            "minutes": 30,
+            "intensity": "high"
+        },
+        {
+            "day": 2,
+            "type": "run",
+            "minutes": 90,
+            "intensity": "low"
+        }
+    ]
+}

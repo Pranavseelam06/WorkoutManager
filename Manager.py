@@ -1,21 +1,16 @@
-user_exists = []
-log = {
+import json
+
+user_exists = {
 
 }
+log = []
+
 day = 0
-with open("log.txt", "r") as file:
-    lines = file.readlines()
-    i = 0
-    for l in lines:
-        if i == 0:
-            name = l.strip().split(";")
-            user_exists = name
-            i += 1
-            continue
-        s = l.strip().split(";")
-        v = [s[1],s[2],s[3]]
-        log[s[0]] = v
-        day += 1
+with open("log.json", "r") as file:
+    lines = json.load(file)
+    user_exists = lines["profile"]
+    log = lines["logs"]
+    day = int(log[-1]["day"])
         
 
 def option_One(option):
@@ -23,6 +18,7 @@ def option_One(option):
         print("--------------------------")
         print("Please Enter Your Name")
         name = input()
+        user_exists["name"] = name
         print("Please Enter Your Fitness Goal:")
         print("1. Fat Loss")
         print("2. Muscle Gain")
@@ -41,13 +37,13 @@ def option_One(option):
             except ValueError: 
                 print("Please Enter a valid Number")
         if choice == 1:
-            return [name, "Fat Loss"]
+            user_exists["goal"] = "Fat Loss"
         elif choice == 2:
-            return [name, "Muscle Gain"]
+            user_exists["goal"] = "Muscle Gain"
         elif choice == 3:
-            return [name, "Endurance"]
+            user_exists["goal"] = "Endurance"
         else:
-            return [name, "General Fitness"]
+            user_exists["goal"] = "General Fitness"
     else:
         print("--------------------------")
         print("Please Enter Your Fitness Goal:")
@@ -68,13 +64,13 @@ def option_One(option):
             except ValueError: 
                 print("Please Enter a valid Number")
         if choice == 1:
-            return "Fat Loss"
+            user_exists["goal"] = "Fat Loss"
         elif choice == 2:
-            return "Muscle Gain"
+            user_exists["goal"] = "Muscle Gain"
         elif choice == 3:
-            return "Endurance"
+            user_exists["goal"] = "Endurance"
         else:
-            return "General Fitness"
+            user_exists["goal"] = "General Fitness"
 def option_Two():
     global day
     valid_option = False
@@ -85,6 +81,9 @@ def option_Two():
             print("Please Enter Workout In This Format")
             print("type:minutes:intensity")
             print("Intensity can be Low, Medium, High")
+            workout_dict = {
+
+            }
             workout = input()
             workout = workout.split(":")
             workout [1] = int(workout[1])
@@ -94,7 +93,11 @@ def option_Two():
                 continue
             if  workout[2] == "low" or workout[2] == "high" or workout[2]== "medium":
                 day += 1
-                log[f"Day:{day}"] = workout
+                workout_dict["day"] = day
+                workout_dict["type"] = workout[0].lower()
+                workout_dict["minutes"] = int(workout[1])
+                workout_dict["intensity"] = workout[2]
+                log.append(workout_dict)
                 print("Added Workout")
                 return
             else: 
@@ -109,8 +112,8 @@ def option_Three():
         return
     print("--------------------------")
     print("Here is the complete Log")
-    for key, value in log.items():
-        print(f"{key}, Workout Info: Type: {value[0]}, Time: {value[1]}, Intensity: {value[2]}")
+    for line in log:
+        print(f"Day: {line["day"]}, Workout Info: Type: {line["type"]}, Time: {line["minutes"]}, Intensity: {line["intensity"]}")
     return
 def option_Four():
     Intensity_types = {
@@ -123,16 +126,16 @@ def option_Four():
         print("No logs added cannot do this process")
         return
     time_total = 0
-    for key, value in log.items():
-        time_total += int(value[1])
-        if value[0] not in workout_types:
-            workout_types[value[0]] = int(value[1])
+    for line in log:
+        time_total += int(line["minutes"])
+        if line["type"] not in workout_types:
+            workout_types[line["type"]] = int(line["minutes"])
         else:
-            workout_types[value[0]] += int(value[1])
-        if value[2] not in Intensity_types:
-            Intensity_types[value[2]] = 1
+            workout_types[line["type"]] += int(line["minutes"])
+        if line["intensity"] not in Intensity_types:
+            Intensity_types[line["intensity"]] = 1
         else:
-            Intensity_types[value[2]] += 1
+            Intensity_types[line["intensity"]] += 1
     average_time = time_total / day
     print("--------------------------")
     print("Here is your analysis:")
@@ -153,11 +156,11 @@ def option_Five():
         return
     high_intensity = set()
     print("Here are the days you did well:")
-    for key, value in log.items():
-        if(value[2] == "high"):
-            high_intensity.add(f"{key}, Workout Info: Type: {value[0]}, Time: {value[1]}, Intensity: {value[2]}")
-        if(int(value[1]) > 60):
-            high_intensity.add(f"{key}, Workout Info: Type: {value[0]}, Time: {value[1]}, Intensity: {value[2]}")
+    for value in log:
+        if(value["intensity"] == "high"):
+            high_intensity.add(f"Day: {value["day"]}, Workout Info: Type: {value["type"]}, Time: {value["minutes"]}, Intensity: {value["intensity"]}")
+        if(int(value["minutes"]) > 60):
+            high_intensity.add(f"{value["day"]}, Workout Info: Type: {value["type"]}, Time: {value["minutes"]}, Intensity: {value["intensity"]}")
     print("--------------------------")        
     for value in high_intensity:
         print(value)
@@ -190,10 +193,10 @@ while True:
             print("Please Enter a valid Number")
     if choice == 1:
         if not user_exists: 
-            user_exists = option_One("Set")
+            option_One("Set")
         else: 
-            print(f"Current Info: Name: {user_exists[0]}, Level: {user_exists[1]}")
-            user_exists[1] = option_One("Update")
+            print(f"Current Info: Name: {user_exists["name"]}, Level: {user_exists["goal"]}")
+            option_One("Update")
     elif choice == 2:
         option_Two()
     elif choice == 3:
@@ -203,15 +206,16 @@ while True:
     elif choice == 5:
         option_Five()
     elif choice == 6:
-        log = {
-
-        }
+        log = []
         day = 0
         print("Reset Data Complete")
     elif choice == 7:
-        with open("log.txt", "w") as file:
-            file.write(f"{user_exists[0]};{user_exists[1]}" + "\n")
-            for key,value in log.items():
-                file.write(f"{key};{value[0]};{value[1]};{value[2]}" + "\n")
+        with open("log.json", "w") as file:
+            data = {
+
+            }
+            data["profile"] = user_exists
+            data["logs"] = log
+            json.dump(data, file, indent=4)
         break
 print("Thank You For Visiting")
