@@ -3,6 +3,21 @@ log = {
 
 }
 day = 0
+with open("log.txt", "r") as file:
+    lines = file.readlines()
+    i = 0
+    for l in lines:
+        if i == 0:
+            name = l.strip().split(";")
+            user_exists = name
+            i += 1
+            continue
+        s = l.strip().split(";")
+        v = [s[1],s[2],s[3]]
+        log[s[0]] = v
+        day += 1
+        
+
 def option_One(option):
     if option == "Set":
         print("--------------------------")
@@ -109,7 +124,7 @@ def option_Four():
         return
     time_total = 0
     for key, value in log.items():
-        time_total += value[1]
+        time_total += int(value[1])
         if value[0] not in workout_types:
             workout_types[value[0]] = value[1]
         else:
@@ -141,12 +156,13 @@ def option_Five():
     for key, value in log.items():
         if(value[2] == "high"):
             high_intensity.add(f"{key}, Workout Info: Type: {value[0]}, Time: {value[1]}, Intensity: {value[2]}")
-        if(value[1] > 60):
+        if(int(value[1]) > 60):
             high_intensity.add(f"{key}, Workout Info: Type: {value[0]}, Time: {value[1]}, Intensity: {value[2]}")
     print("--------------------------")        
     for value in high_intensity:
         print(value)
     return
+
 
 while True:
     print("--------------------------")
@@ -193,5 +209,9 @@ while True:
         day = 0
         print("Reset Data Complete")
     elif choice == 7:
+        with open("log.txt", "w") as file:
+            file.write(f"{user_exists[0]};{user_exists[1]}" + "\n")
+            for key,value in log.items():
+                file.write(f"{key};{value[0]};{value[1]};{value[2]}" + "\n")
         break
 print("Thank You For Visiting")

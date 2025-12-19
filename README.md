@@ -18,6 +18,7 @@ A menu-driven Python console application that allows users to create a fitness p
   - Long-duration workout days
 - Ability to reset all data during runtime
 - Graceful program exit
+- Saves information for future usage
 
 ## How to Run
 
@@ -27,4 +28,3 @@ A menu-driven Python console application that allows users to create a fitness p
 
 ## Future Updates
 - GUI System
-- File Storage
