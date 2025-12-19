@@ -113,7 +113,7 @@ def option_Three():
     print("--------------------------")
     print("Here is the complete Log")
     for line in log:
-        print(f"Day: {line["day"]}, Workout Info: Type: {line["type"]}, Time: {line["minutes"]}, Intensity: {line["intensity"]}")
+        print(f"Day: {line['day']}, Workout Info: Type: {line['type']}, Time: {line['minutes']}, Intensity: {line['intensity']}")
     return
 def option_Four():
     Intensity_types = {
@@ -158,9 +158,9 @@ def option_Five():
     print("Here are the days you did well:")
     for value in log:
         if(value["intensity"] == "high"):
-            high_intensity.add(f"Day: {value["day"]}, Workout Info: Type: {value["type"]}, Time: {value["minutes"]}, Intensity: {value["intensity"]}")
+            high_intensity.add(f"Day: {value['day']}, Workout Info: Type: {value['type']}, Time: {value['minutes']}, Intensity: {value['intensity']}")
         if(int(value["minutes"]) > 60):
-            high_intensity.add(f"{value["day"]}, Workout Info: Type: {value["type"]}, Time: {value["minutes"]}, Intensity: {value["intensity"]}")
+            high_intensity.add(f"Day: {value['day']}, Workout Info: Type: {value['type']}, Time: {value['minutes']}, Intensity: {value['intensity']}")
     print("--------------------------")        
     for value in high_intensity:
         print(value)
@@ -195,7 +195,7 @@ while True:
         if not user_exists: 
             option_One("Set")
         else: 
-            print(f"Current Info: Name: {user_exists["name"]}, Level: {user_exists["goal"]}")
+            print(f"Current Info: Name: {user_exists['name']}, Level: {user_exists['goal']}")
             option_One("Update")
     elif choice == 2:
         option_Two()
