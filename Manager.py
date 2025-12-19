@@ -126,9 +126,9 @@ def option_Four():
     for key, value in log.items():
         time_total += int(value[1])
         if value[0] not in workout_types:
-            workout_types[value[0]] = value[1]
+            workout_types[value[0]] = int(value[1])
         else:
-            workout_types[value[0]] += value[1]
+            workout_types[value[0]] += int(value[1])
         if value[2] not in Intensity_types:
             Intensity_types[value[2]] = 1
         else:
